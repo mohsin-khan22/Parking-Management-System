@@ -29,18 +29,12 @@ BookingSchema.methods.calculateRent = function (date1, date2) {
 BookingSchema.methods.toJSON = function () {
   return {
     floors: this.floors,
-    vehicle: {
-      model: this.model,
-      color: this.color,
-      number: this.number,
-      owner: {
-        firstName: this.firstName,
-        lastName: this.lastName,
-        email: this.email,
-      },
-    },
+    vehicles: this.vehicles,
+    user: this.user,
+    startTime: this.startTime,
+    endTime: this.endTime,
   };
 };
-//BookingSchema.plugin(uniqueValidator);
+BookingSchema.plugin(uniqueValidator);
 
 module.exports = mongoose.model("Booking", BookingSchema);

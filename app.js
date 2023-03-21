@@ -1,26 +1,18 @@
 const express = require("express");
-const mongoose = require("mongoose");
-const bodyParser = require("body-parser");
-const router = require("./routes");
+const app = express();
+let PORT = 8080;
 require("dotenv").config();
 
-const app = express();
-require("./models/User");
-app.use(bodyParser.json());
-app.use(router);
+require("./app-config")(app);
 
-const PORT = 3000;
-mongoose
-  .connect("mongodb://127.0.0.1:27017/parkdb", {
-    useNewUrlParser: true,
-    useFindAndModify: false,
-    useUnifiedTopology: true,
-    useCreateIndex: true,
-  })
-  .then(() => {
-    mongoose.set("debug", true);
-    app.listen(PORT, () => {
-      console.log(`Listening at port ${PORT}.`);
-    });
-    console.log("Connected to database successfully");
-  });
+app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
+
+// Server Testing
+app.get("/", (req, res) => {
+  res.send("heloo");
+});
+
+app.listen(PORT, () => {
+  console.log(`server started on port ${PORT}`);
+});

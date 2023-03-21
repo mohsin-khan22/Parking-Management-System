@@ -6,10 +6,10 @@ const auth = require("../auth");
 
 router.post("/enter", auth.isToken, auth.isUser, function (req, res) {
   try {
-    User.findOne({ email: req.body.email }, (err, data) => {
+    Vehicle.findOne({ number: req.body.number }, (err, vehicle) => {
       if (err) {
-        res.send("User is yet to be registered");
-      } else if (data) {
+        res.send("Vehicle already registered");
+      } else if (!vehicle) {
         var vehicle = new Vehicle();
         vehicle.model = req.body.model;
         vehicle.color = req.body.color;

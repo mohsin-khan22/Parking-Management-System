@@ -1,4 +1,5 @@
 const jsonwebtoken = require("jsonwebtoken");
+
 const User = require("../models/User");
 
 const isToken = function (req, res, next) {

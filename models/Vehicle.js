@@ -20,6 +20,7 @@ vehicleSchema.methods.toJSON = function () {
     model: this.model,
     color: this.color,
     number: this.number,
+    owner: this.model,
   };
 };
 module.exports = mongoose.model("Vehicle", vehicleSchema);
