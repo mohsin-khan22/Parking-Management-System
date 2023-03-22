@@ -3,6 +3,7 @@ const fs = require("fs");
 const path = require("path");
 const Handlebars = require("handlebars");
 const smtpAuth = require("../config").smtpAuth;
+const { emailVerifyTemplate } = require("./emailTemplate");
 
 const sendEmail = (mailDetails) => {
   const transporter = nodemailer.createTransport({
@@ -32,7 +33,7 @@ const sendEmail = (mailDetails) => {
 
 const sendEmailVerificationOTP = async (user) => {
   sendEmail({
-    from: "Self assessment<stiching@info.pk>",
+    from: '"support@ebankc.io" <support@ebankc.io>',
     to: user.email,
     subject: "Email Verification",
     templateObj: {

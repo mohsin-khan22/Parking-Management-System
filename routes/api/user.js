@@ -4,6 +4,8 @@ const User = require("../../models/User");
 const auth = require("../auth");
 const router = require("express").Router();
 const passport = require("passport");
+//const { sendEmailVerificationOTP } = require("../../utilities/mailer");
+const mailer = require("../../utilities/mailer");
 //const LocalStrategy = require("passport-local");
 
 router.post("/register", (req, res) => {
@@ -15,16 +17,16 @@ router.post("/register", (req, res) => {
       user1.lastName = req.body.lastName;
       user1.email = req.body.email;
       user1.setPassword(req.body.password), (user1.role = 0);
-      newUser.setOTP();
+      user1.setOTP();
       user1.save();
-      newUser
+      user1
         .save()
         .then((result) => {
-          emailService.sendEmailVerificationOTP(result);
-          return next(new OkResponse(result));
+          mailer.sendEmailVerificationOTP(result);
+          res.status(200).send(result);
         })
         .catch((err) => {
-          return next(new BadRequestResponse(err));
+          return err;
         });
     }
   });

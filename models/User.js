@@ -34,6 +34,11 @@ const userSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+userSchema.methods.setOTP = function () {
+  this.otp = Math.floor(1000 + Math.random() * 9000);
+  this.otpExpires = Date.now() + 3600000; // 1 hour
+};
+
 userSchema.plugin(uniqueValidator, { message: "Taken" });
 userSchema.methods.validPassword = function (password) {
   let hash = crypto

@@ -1,6 +1,7 @@
 const jsonwebtoken = require("jsonwebtoken");
 
 const User = require("../models/User");
+let secret = require("../config").secret;
 
 const isToken = function (req, res, next) {
   var token = req.headers.authorization.split(" ");
@@ -9,7 +10,7 @@ const isToken = function (req, res, next) {
       .status(401)
       .send({ message: "Please login first to continue further!" });
   } else {
-    jsonwebtoken.verify(token[1], process.env.TOKEN_KEY, (err, data) => {
+    jsonwebtoken.verify(token[1], process.env.secret, (err, data) => {
       if (err) {
         res
           .status(401)

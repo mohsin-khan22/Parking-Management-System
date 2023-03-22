@@ -76,8 +76,8 @@ module.exports = (app) => {
       .connect(`${MONGODB_URI}?retryWrites=false`, {
         useNewUrlParser: true,
         useUnifiedTopology: true,
-        // useFindAndModify: false,
-        // useCreateIndex: true,
+        useFindAndModify: false,
+        useCreateIndex: true,
       })
       .then(() => {
         console.log("connected to database");
