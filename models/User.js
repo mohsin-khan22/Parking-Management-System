@@ -25,6 +25,8 @@ const userSchema = new mongoose.Schema(
       type: Date,
       default: null,
     },
+    isOtpVerified: { type: Boolean, default: false },
+    isEmailVerified: { type: Boolean, default: false },
     hash: { type: String, default: null },
     salt: String,
     role: {
@@ -66,6 +68,10 @@ userSchema.methods.toJSON = function () {
     firstName: this.firstName,
     lastName: this.lastName,
     role: this.role,
+    otp: this.otp,
+    otpExpires: this.otpExpires,
+    isOtpVerified: this.isOtpVerified,
+    isEmailVerified: this.isEmailVerified,
   };
 };
 
@@ -76,6 +82,10 @@ userSchema.methods.toAuthJSON = function () {
     firstName: this.firstName,
     lastName: this.lastName,
     role: this.role,
+    otp: this.otp,
+    otpExpires: this.otpExpires,
+    isOtpVerified: this.isOtpVerified,
+    isEmailVerified: this.isEmailVerified,
   };
 };
 module.exports = mongoose.model("User", userSchema);

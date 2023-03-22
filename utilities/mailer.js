@@ -3,11 +3,10 @@ const fs = require("fs");
 const path = require("path");
 const Handlebars = require("handlebars");
 const smtpAuth = require("../config").smtpAuth;
-const { emailVerifyTemplate } = require("./emailTemplate");
 
 const sendEmail = (mailDetails) => {
   const transporter = nodemailer.createTransport({
-    host: "smtp.gmail.com",
+    host: "smtp.porkbun.com",
     port: 465,
     secure: true,
     auth: smtpAuth,
@@ -33,7 +32,7 @@ const sendEmail = (mailDetails) => {
 
 const sendEmailVerificationOTP = async (user) => {
   sendEmail({
-    from: '"support@ebankc.io" <support@ebankc.io>',
+    from: "Self Assessment<support@ebankc.io>",
     to: user.email,
     subject: "Email Verification",
     templateObj: {

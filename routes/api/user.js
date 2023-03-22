@@ -6,6 +6,8 @@ const router = require("express").Router();
 const passport = require("passport");
 //const { sendEmailVerificationOTP } = require("../../utilities/mailer");
 const mailer = require("../../utilities/mailer");
+let frontend = require("../../config").frontend;
+let backend = require("../../config").backend;
 //const LocalStrategy = require("passport-local");
 
 router.post("/register", (req, res) => {
@@ -18,7 +20,8 @@ router.post("/register", (req, res) => {
       user1.email = req.body.email;
       user1.setPassword(req.body.password), (user1.role = 0);
       user1.setOTP();
-      user1.save();
+      //user1.link = `${backend}/api/verify/email/${user1.email}}`;
+
       user1
         .save()
         .then((result) => {
