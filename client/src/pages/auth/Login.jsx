@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 //import { useDispatch } from "react-redux";
 
 //import { setAuth } from "../../store/user";
@@ -80,24 +81,30 @@ export const Login = () => {
         // console.log(res);
 
         localStorage.setItem("token", res.data.token);
-        if (res.data.role == 1) {
-          console.log("goto admin side");
-          navigate("/admin/AdminDashboard");
-        } else {
-          console.log("goto user side");
-          navigate("/user/UserDashboard");
-        }
-        http.refreshToken();
-        setEmail("");
-        setPassword("");
-        setProfileError(null);
-        // navigate("/");
+        Swal.fire({
+          icon: "success",
+          title: "Login successful",
+          confirmButtonText: "OK",
+        }).then(() => {
+          if (res.data.role == 1) {
+            console.log("goto admin side");
+            navigate("/admin/AdminDashboard");
+          } else {
+            console.log("goto user side");
+            navigate("/user/UserDashboard");
+          }
+          http.refreshToken();
+          setEmail("");
+          setPassword("");
+          setProfileError(null);
+          // navigate("/");
+        });
       })
-      .catch((err) => {
-        setError(err?.response?.data?.message);
-        if (err?.response?.data?.code === 405)
-          setProfileError(err?.response?.data);
-        else setProfileError(null);
+      .catch((error) => {
+        //console.log(err);
+        setError(error?.response?.data);
+
+        console.log("err", error?.res?.data);
       });
   };
 
@@ -189,31 +196,13 @@ export const Login = () => {
                   </span>
                 )}
               </div>
-              {error?.length > 0 && (
-                <div className="alert alert-danger fs-12">
-                  {error}
-                  {profileError && (
-                    <>
-                      {profileError?.moreInfo?.profileStatus === "creation" && (
-                        <Link
-                          to={`/auth/complete-profile/${profileError?.moreInfo?.ref}`}
-                          className="text-primary mx-3"
-                        >
-                          Complete Now?
-                        </Link>
-                      )}
-                      {profileError?.moreInfo?.profileStatus === "details" && (
-                        <Link
-                          to={`/auth/availability/${profileError?.moreInfo?.ref}`}
-                          className="text-primary mx-3"
-                        >
-                          Complete Now?
-                        </Link>
-                      )}
-                    </>
-                  )}
-                </div>
-              )}
+              <div className="col-lg-12">
+                {error?.length > 0 && (
+                  <div className="error-message text-danger mb-3 fs-16 text-center">
+                    {error}
+                  </div>
+                )}
+              </div>
               <div className="row justify-content-center">
                 <div className="col-md-4">
                   <div className="mb-3 mt-5">

@@ -7,16 +7,18 @@ import { AdminDashboard } from "./pages/admin/AdminDashboard";
 import { UserDashboard } from "./pages/user/UserDashboard";
 //import { Provider } from "react-redux";
 import { Routes, Route } from "react-router-dom";
+import { OtpVerification } from "./pages/auth/Otp";
 //import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
 function App() {
   return (
     <>
       <Routes>
-        <Route path="/" element={<Login />} />
+        <Route path="/auth" element={<Login />} />
         <Route path="/auth/SignUp" element={<SignUp />} />
         <Route path="/admin/AdminDashboard" element={<AdminDashboard />} />
         <Route path="/user/UserDashboard" element={<UserDashboard />} />
+        <Route path="/auth/Otp/:email" element={<OtpVerification />} />
       </Routes>
     </>
   );

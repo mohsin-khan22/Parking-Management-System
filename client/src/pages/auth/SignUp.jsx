@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { environment } from "../../constants";
 import { validateInput } from "../../core/helpers/inputValidator";
 import http from "../../api";
+import Swal from "sweetalert2";
 //import numericOnly from "../../core/directives/numericOnly";
 //import phoneNumber from "../../core/directives/phoneNumber";
 //import { Loader } from "../../components/Loader";
@@ -74,13 +75,21 @@ export const SignUp = () => {
 
     http
       .post(environment.api_url + "/user/register", body)
+
       .then((res) => {
-        setError("");
-        setBody(defaultBody);
-        navigate("/" + res.data.data.user._id);
+        Swal.fire({
+          icon: "success",
+          title: "Registration successful",
+          text: "Please check your email for verification",
+          confirmButtonText: "OK",
+          // setError("");
+          // setBody(defaultBody);
+        }).then(() => {
+          navigate(`/auth/otp/${res.data.email}`);
+        });
       })
       .catch((err) => {
-        setError(err?.response?.data?.message);
+        setError(err?.response?.data);
       });
   };
 

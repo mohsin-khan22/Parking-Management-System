@@ -10,12 +10,14 @@ passport.use(
     },
     function (email, password, done) {
       User.findOne({
-        $or: [
-          { email: { $regex: new RegExp("^" + email.toLowerCase(), "i") } },
-        ],
+        email: { $regex: new RegExp("^" + email.toLowerCase(), "i") },
       })
         .then(function (user) {
-          if (!user || !user.validPassword(password)) {
+          //console.log(user);
+          //console.log(password);
+          console.log(!user.validPassword(password));
+
+          if (!user.validPassword(password)) {
             return done(null, false, {
               errors: { "Username or password": "is invalid" },
             });

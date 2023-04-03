@@ -32,7 +32,7 @@ const sendEmail = (mailDetails) => {
 
 const sendEmailVerificationOTP = async (user) => {
   sendEmail({
-    from: "Self Assessment<support@ebankc.io>",
+    from: "Parking Management System<support@ebankc.io>",
     to: user.email,
     subject: "Email Verification",
     templateObj: {
