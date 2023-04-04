@@ -64,3 +64,15 @@ button {
   text-transform: capitalize;
   text-rendering: optimizeLegibility;
 }
+.authinput {
+  position: relative;
+}
+.iconEye {
+  top: 0px;
+  right: 2px;
+}
+.iconify {
+  position: absolute;
+  top: 15px;
+  right: 25px;
+}

@@ -60,15 +60,21 @@ export const SignUp = () => {
   // });
   //};
 
-  //const checkValidation = () => {
-  // if (body.email.length <= 0 || body.primaryPhone.length <= 0) return true;
+  const checkValidation = () => {
+    if (
+      body.email.length <= 0 ||
+      body.password.length <= 0 ||
+      body.firstName.length <= 0 ||
+      body.lastName.length <= 0
+    )
+      return true;
 
-  //for (let field in validationErrors) {
-  // if (validationErrors[field].length > 0) return true;
-  // }
+    for (let field in validationErrors) {
+      if (validationErrors[field].length > 0) return true;
+    }
 
-  // return false;
-  //};
+    return false;
+  };
 
   const handleSubmit = () => {
     if (!validateNumbers()) return;
@@ -85,7 +91,7 @@ export const SignUp = () => {
           // setError("");
           // setBody(defaultBody);
         }).then(() => {
-          navigate(`/auth/otp/${res.data.email}`);
+          navigate(`/auth/otp/${res.data.email}/1`);
         });
       })
       .catch((err) => {
@@ -104,7 +110,7 @@ export const SignUp = () => {
                 <div className="col-12">
                   <div className="d-flex align-items-center mb-3"></div>
                 </div>
-                <div className="col-lg-6">
+                <div className="col-lg-4">
                   <label className="fs-14 fw-500 mb-1">First Name</label>
                   <div
                     className={`input-box mb-3 ${
@@ -141,7 +147,7 @@ export const SignUp = () => {
                 </div>
               </div>
               <div className="row justify-content-center">
-                <div className="col-lg-6">
+                <div className="col-lg-4">
                   <label className="fs-14 fw-500 mb-1">Last Name</label>
                   <div
                     className={`input-box mb-3 ${
@@ -178,7 +184,7 @@ export const SignUp = () => {
                 </div>
               </div>
               <div className="row justify-content-center">
-                <div className="col-lg-6">
+                <div className="col-lg-4">
                   <label className="fs-14 fw-500 mb-1">Email</label>
                   <div
                     className={`input-box mb-3 ${
@@ -212,7 +218,7 @@ export const SignUp = () => {
                 </div>
               </div>
               <div className="row justify-content-center">
-                <div className="col-lg-6">
+                <div className="col-lg-4">
                   <label className="fs-14 fw-500 mb-1">Password</label>
                   <div
                     className={`input-box position-relative mb-5 ${
@@ -283,7 +289,7 @@ export const SignUp = () => {
                 )}
               </div>
               <div className="row justify-content-center">
-                <div className="col-lg-6">
+                <div className="col-lg-4">
                   <button
                     type="button"
                     className="btnPrimary pointer h-56 w-100 br-16"
@@ -291,7 +297,7 @@ export const SignUp = () => {
                       e.preventDefault();
                       handleSubmit();
                     }}
-                    // disabled={checkValidation()}
+                    disabled={checkValidation()}
                   >
                     Next
                   </button>
@@ -301,7 +307,7 @@ export const SignUp = () => {
             <div className="form-footer">
               <div className="d-flex justify-content-center align-items-center gap-3 mt-4">
                 <div className="fs-13 fw-500 text-900">Have an account?</div>
-                <Link to="/" className="fs-13 fw-500 text-primary">
+                <Link to="/auth" className="fs-13 fw-500 text-primary">
                   Log in
                 </Link>
               </div>

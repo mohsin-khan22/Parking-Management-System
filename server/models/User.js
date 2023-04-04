@@ -7,9 +7,11 @@ const userSchema = new mongoose.Schema(
   {
     firstName: {
       type: String,
+      required: true,
     },
     lastName: {
       type: String,
+      required: true,
     },
     email: {
       type: String,
@@ -58,7 +60,9 @@ userSchema.methods.setPassword = function (password) {
     .pbkdf2Sync(password, this.salt, 10000, 512, "sha512")
     .toString("hex");
 };
-
+userSchema.methods.generatePasswordRestToken = function () {
+  this.resetPasswordToken = crypto.randomBytes(20).toString("hex");
+};
 userSchema.methods.generateJWT = function () {
   return jwt.sign({ user_id: this._id, email: this.email }, secret, {
     expiresIn: "24h",

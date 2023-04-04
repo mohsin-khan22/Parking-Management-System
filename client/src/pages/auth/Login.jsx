@@ -53,12 +53,14 @@ export const Login = () => {
   };
 
   const checkDisable = () => {
+    console.log(email, password, validation.email, validation.password);
     if (email.length <= 0 || password.length <= 0) {
       return true;
     }
     if (validation.email.length > 0 || validation.password.length > 0) {
       return true;
     }
+    console.log("Login is enabled");
     return false;
   };
 
@@ -147,7 +149,7 @@ export const Login = () => {
                   </div>
                 </div>
               </div>
-              <div className="row justify-content-center">
+              <div className="row justify-content-center position-relative">
                 <div className="col-md-4">
                   <label className="fs-14 fw-500 mb-1">Password</label>
                   <div
@@ -164,37 +166,38 @@ export const Login = () => {
                       onChange={(e) => handleChange(e)}
                       className="br-16 h-56 authInput"
                     />
+
+                    {validation.password.length > 0 && (
+                      <div className="error">{validation.password}</div>
+                    )}
+                    {!isPasswordVisible && (
+                      <span
+                        onClick={() => {
+                          setIsPasswordVisible(true);
+                        }}
+                        className="iconEye position-absolute"
+                      >
+                        <span
+                          className="iconify"
+                          data-icon="ic:outline-remove-red-eye"
+                        ></span>
+                      </span>
+                    )}
+                    {isPasswordVisible && (
+                      <span
+                        onClick={() => {
+                          setIsPasswordVisible(false);
+                        }}
+                        className="iconEye"
+                      >
+                        <span
+                          className="iconify"
+                          data-icon="pajamas:eye-slash"
+                        ></span>
+                      </span>
+                    )}
                   </div>
                 </div>
-                {validation.password.length > 0 && (
-                  <div className="error">{validation.password}</div>
-                )}
-                {!isPasswordVisible && (
-                  <span
-                    onClick={() => {
-                      setIsPasswordVisible(true);
-                    }}
-                    className="iconEye"
-                  >
-                    <span
-                      className="iconify"
-                      data-icon="ic:outline-remove-red-eye"
-                    ></span>
-                  </span>
-                )}
-                {isPasswordVisible && (
-                  <span
-                    onClick={() => {
-                      setIsPasswordVisible(false);
-                    }}
-                    className="iconEye"
-                  >
-                    <span
-                      className="iconify"
-                      data-icon="pajamas:eye-slash"
-                    ></span>
-                  </span>
-                )}
               </div>
               <div className="col-lg-12">
                 {error?.length > 0 && (
@@ -219,7 +222,7 @@ export const Login = () => {
               </div>
               <div className="text-center">
                 <Link
-                  to="/auth/forget"
+                  to="/auth/Forget"
                   className="fs-14 fw-500 text-800 text-center"
                 >
                   Forgot password
