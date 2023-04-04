@@ -8,6 +8,8 @@ import { UserDashboard } from "./pages/user/UserDashboard";
 //import { Provider } from "react-redux";
 import { Routes, Route } from "react-router-dom";
 import { OtpVerification } from "./pages/auth/Otp";
+import { SetPassword } from "./pages/auth/ResetPassword";
+import { Forget } from "./pages/auth/Forget";
 //import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
 function App() {
@@ -18,7 +20,12 @@ function App() {
         <Route path="/auth/SignUp" element={<SignUp />} />
         <Route path="/admin/AdminDashboard" element={<AdminDashboard />} />
         <Route path="/user/UserDashboard" element={<UserDashboard />} />
-        <Route path="/auth/Otp/:email" element={<OtpVerification />} />
+        <Route path="/auth/Otp/:email/:type" element={<OtpVerification />} />
+        <Route
+          path="/auth/ResetPassword/:email/:types"
+          element={<SetPassword />}
+        />
+        <Route path="/auth/Forget" element={<Forget />} />
       </Routes>
     </>
   );
