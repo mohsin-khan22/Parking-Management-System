@@ -9,7 +9,7 @@ import Swal from "sweetalert2";
 
 export const SetPassword = () => {
   const navigate = useNavigate();
-  const { id, resetToken } = useParams();
+  const { email, passwordRestToken } = useParams();
 
   const defaultBody = {
     password: "",
@@ -60,6 +60,7 @@ export const SetPassword = () => {
         };
       else temp = { ...temp, password: "" };
     }
+    console.log(temp, validationErrors);
     setValidation(temp);
   };
 
@@ -76,9 +77,11 @@ export const SetPassword = () => {
   };
 
   const validatePasswords = () => {
+    console.log(typeof body.password, typeof body.confirmPassword);
     if (body.password !== body.confirmPassword) {
+      //setError("Passwords do not match");
       setIsPasswordDisMatch(true);
-      setBody({ ...body, confirmPassword: "" });
+      setBody({ ...body, confirmPassword: " " });
       return false;
     } else {
       setIsPasswordDisMatch(false);
@@ -86,13 +89,20 @@ export const SetPassword = () => {
     }
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = (e) => {
     if (!validatePasswords()) return;
-
+    // e.preventDefault();
+    //let body = {
+    //email: email,
+    // password: password,
+    // };
     http
-      .post(`${environment.api_url}/user/resetPasword/${id}/${resetToken}`, {
-        password: body.password,
-      })
+      .post(
+        `${environment.api_url}/user/resetPassword/${email}/${passwordRestToken}`,
+        {
+          password: body.password,
+        }
+      )
       .then((res) => {
         Swal.fire({
           title: "Success",
@@ -263,7 +273,7 @@ export const SetPassword = () => {
                   className="btnPrimary h-56 w-100 br-16"
                   onClick={(e) => {
                     e.preventDefault();
-                    handleSubmit();
+                    handleSubmit(e);
                   }}
                   disabled={checkValidation()}
                 >

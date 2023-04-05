@@ -8,6 +8,7 @@ const passport = require("passport");
 const mailer = require("../../utilities/mailer");
 let frontend = require("../../config").frontend;
 let backend = require("../../config").backend;
+let bcrypt = require("bcrypt");
 //const LocalStrategy = require("passport-local");
 
 router.post("/register", (req, res) => {
@@ -82,16 +83,17 @@ router.post("/verify-otp/:type", async (req, res, next) => {
     return res.status(422).send("Missing Required parameters");
   }
 
-  let query = {
-    email: email,
-  };
+  //let query = {
+  //email: email,
+  //};
 
-  const user = await User.findOne(query);
+  const user = await User.findOne({ email });
+  console.log(user);
   if (!user) {
-    return res.status(400).send("User not found");
+    return res.status(404).send("User not found");
   }
-
-  if (user.otp !== otp) {
+  console.log(user.otp, otp);
+  if (user.otp != otp) {
     return res.status(400).send("Invalid OTP");
   }
 
@@ -107,7 +109,7 @@ router.post("/verify-otp/:type", async (req, res, next) => {
 
   await user.save().then((user) => {
     if (+req.params.type === 1) {
-      return next(new OkResponse(user.toAuthJSON()));
+      return res.status(200).send(user.toAuthJSON());
     } else if (+req.params.type === 2) {
       return res
         .status(200)
@@ -141,15 +143,15 @@ router.post("/otpresend", async (req, res, next) => {
     return res.status(500).send(err);
   }
 });
-router.post("/resetPassword:_id/:resetPasswordToken", (req, res, next) => {
+/*router.post("/resetPassword/:email/:passwordRestToken", (req, res, next) => {
   if (
-    req.userToUpdate.resetPasswordToken === req.params.resetPasswordToken &&
-    req.userToUpdate.otpExpires > Date.now()
+    req.user.resetPasswordTokenn === req.params.resetPasswordToken &&
+    req.user.otpExpires > Date.now()
   ) {
     if (!req.body.password || req.body.password == "")
       return res.status(422).send("Missing Required Parameters");
-    req.userToUpdate.setPassword(req.body.password);
-    req.userToUpdate.save(function (err) {
+    req.user.setPassword(req.body.password);
+    req.user.save(function (err) {
       if (err) return res.status(400).send(err);
       return res.status(200).send({
         message: "Password has been changed successfully",
@@ -157,7 +159,47 @@ router.post("/resetPassword:_id/:resetPasswordToken", (req, res, next) => {
       });
     });
   } else return res.status(400).send("Invalid OTP");
-});
+});*/
+router.post(
+  "/resetPassword/:email/:passwordRestToken",
+  async (req, res, next) => {
+    let email = req.params.email;
+
+    console.log("token", req.body);
+
+    try {
+      let user = await User.findOne({ email });
+
+      if (!user) {
+        return res.status(400).send("User not found");
+      }
+
+      // if (!req.body.passwordRestToken || !req.body.password) {
+      // return res.status(422).send("Missing Required Parameters");
+      //}
+      if (req.params.resetPasswordToken !== user.resetPasswordToken) {
+        return res.status(400).send("Invalid Password Reset Token");
+      }
+
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(req.body.password, salt);
+
+      user.password = hashedPassword;
+      await user
+        .save()
+        .then((result) => {
+          return res.status(200).send({
+            message: "Password has been changed successfully",
+          });
+        })
+        .catch((err) => {
+          return res.status(500).send(err.message);
+        });
+    } catch (error) {
+      return res.status(500).send(error.message);
+    }
+  }
+);
 router.post("/updateprofile", auth.isToken, async (req, res) => {
   try {
     const oldUser = await User.findOne({ email: req.user.email });

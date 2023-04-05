@@ -17,14 +17,14 @@ export function OtpVerification() {
     // Send a POST request to your server to verify the OTP
 
     axios
-      .post("/user/verify-otp", { otp, email, type })
+      .post("/user/verify-otp/" + type, { otp, email })
       .then((res) => {
         console.log(res);
         if (parseInt(type) === 1) {
           navigate("/auth");
         } else if (parseInt(type) === 2) {
           navigate(
-            `/reset-password/${res.data.email}/${res.data.passwordResetToken}`
+            `/auth/ResetPassword/${res.data.user.email}/${res.data.passwordRestToken}`
           );
         }
       })
@@ -44,7 +44,7 @@ export function OtpVerification() {
           title: "Otp resend successfully",
           text: "Please check your email for verification",
           confirmButtonText: "OK",
-          timer: 1500,
+          //timer: 1500,
         });
         // OTP verification successful
         //navigate("/auth");

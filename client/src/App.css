@@ -76,3 +76,6 @@ button {
   top: 15px;
   right: 25px;
 }
+.error {
+  color: #f44336;
+}

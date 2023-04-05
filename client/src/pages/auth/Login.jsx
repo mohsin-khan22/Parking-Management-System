@@ -86,7 +86,10 @@ export const Login = () => {
         Swal.fire({
           icon: "success",
           title: "Login successful",
-          confirmButtonText: "OK",
+          timer: 1000,
+          showConfirmButton: false,
+          showDenyButton: false,
+          //confirmButtonText: "OK",
         }).then(() => {
           if (res.data.role == 1) {
             console.log("goto admin side");

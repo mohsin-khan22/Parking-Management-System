@@ -66,11 +66,11 @@ const validateInput = (event, valueToCompare) => {
     }
   }
 
-  if (target.name === "confirmPassword") {
-    if (target.value !== valueToCompare) {
-      errors.push("Confirm Password does not match Password");
-    }
-  }
+  //if (target.name === "confirmPassword") {
+  // if (target.value !== valueToCompare) {
+  // errors.push("Confirm Password does not match Password");
+  // }
+  //}
 
   return errors;
 };
