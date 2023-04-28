@@ -8,7 +8,7 @@ const passport = require("passport");
 const LocalStrategy = require("passport-local");
 const auth = require("../auth");
 
-router.get("/userlist", auth.isToken, auth.isAdmin, async (req, res) => {
+/*router.get("/users", auth.isToken, auth.isAdmin, async (req, res) => {
   try {
     User.find()
       .populate()
@@ -22,18 +22,45 @@ router.get("/userlist", auth.isToken, auth.isAdmin, async (req, res) => {
   } catch (err) {
     console.log(err);
   }
+});*/
+router.get("/getUsers", auth.isToken, auth.isAdmin, (req, res, next) => {
+  User.find({ role: 0 })
+    .then((user) => {
+      return res.status(200).send(user);
+    })
+    .catch((err) => {
+      return res.status(400).send(err);
+    });
 });
-router.delete("/deleteUser", auth.isToken, auth.isAdmin, (req, res) => {
+
+router.delete("/delete/:id", auth.isToken, auth.isAdmin, (req, res) => {
   try {
-    User.deleteOne({ email: req.body.email }, (err, data) => {
+    User.deleteOne({ _id: req.params.id }, (err, data) => {
       if (err) {
-        res.status(500).send("User not found");
+        return res.status(400).send("User not found");
       } else {
-        res.status(200).send(data);
+        return res.status(200).send("user Deleted");
       }
     });
   } catch (err) {
-    res.send("User cannot be deleted");
+    return res.send("User cannot be deleted");
   }
 });
+/*router.delete("/delete/:email", auth.required, auth.admin, (req, res, next) => {
+  User.deleteOne({ email: req.params.email })
+    .then((deletesUser) => {
+      console.log(deletesUser);
+
+      return next(new OkResponse("User deleted"));
+    })
+    .catch((err) => {
+      return next(
+        new BadRequestResponse({
+          error:
+            "The Email you want to deleted is not registered in our database",
+        })
+      );
+    });
+});*/
+
 module.exports = router;
