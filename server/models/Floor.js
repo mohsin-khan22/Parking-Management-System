@@ -1,8 +1,8 @@
 const mongoose = require("mongoose");
 const uniqueValidator = require("mongoose-unique-validator");
 const FloorSchema = new mongoose.Schema({
-  floornNo: {
-    type: String,
+  floorNo: {
+    type: Number,
     required: true,
     unique: true,
   },
@@ -17,8 +17,9 @@ FloorSchema.plugin(uniqueValidator);
 
 FloorSchema.methods.toJSON = function () {
   return {
+    id: this.id,
     floorNo: this.floorNo,
-    spots: this.spots,
+    //spots: this.spots,
   };
 };
 

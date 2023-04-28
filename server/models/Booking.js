@@ -2,11 +2,33 @@ const mongoose = require("mongoose");
 var uniqueValidator = require("mongoose-unique-validator");
 
 const BookingSchema = mongoose.Schema({
-  floors: { type: String, required: true },
+  floorNo: { type: String, required: true },
+  model: { type: String, required: true },
   vehicles: { type: mongoose.Schema.Types.ObjectId, ref: "Vehicle" },
-  user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-  startTime: { type: String, default: Date.now() },
-  endTime: { type: String, required: true },
+  //user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+  owner: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+  isBooked: {
+    type: Boolean,
+    default: false,
+  },
+  bookedAt: {
+    type: Date,
+  },
+  endBooking: {
+    type: Date,
+  },
+  bill: {
+    // $20/hour
+    type: String,
+    default: "$0",
+  },
+  fine: {
+    // $10/ 15 mins
+    type: String,
+    default: "$0",
+  },
+  //startTime: { type: String, default: Date.now() },
+  //endTime: { type: String, required: true },
 });
 
 BookingSchema.pre("find", function () {
@@ -27,14 +49,29 @@ BookingSchema.methods.calculateRent = function (date1, date2) {
 };
 
 BookingSchema.methods.toJSON = function () {
+  const date = new Date(this.bookedAt).toUTCString();
   return {
-    floors: this.floors,
+    id: this.id,
+    owner: this.owner,
+    model: this.model,
     vehicles: this.vehicles,
-    user: this.user,
-    startTime: this.startTime,
-    endTime: this.endTime,
+    fine: this.fine,
+    bill: this.bill,
+    // isBooked: this.isBooked,
+    floorNo: this.floorNo,
+    //spot: this.spot,
+    bookedAt: date === "Invalid Date" ? this.bookedAt : date,
   };
 };
-BookingSchema.plugin(uniqueValidator);
+//BookingSchema.methods.toJSON = function () {
+//return {
+//floors: this.floors,
+//vehicles: this.vehicles,
+//user: this.user,
+//startTime: this.startTime,
+//endTime: this.endTime,
+//};
+//};
+//BookingSchema.plugin(uniqueValidator);
 
 module.exports = mongoose.model("Booking", BookingSchema);

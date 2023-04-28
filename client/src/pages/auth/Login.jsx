@@ -1,15 +1,15 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
-//import { useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 
-//import { setAuth } from "../../store/user";
+import { setAuth } from "../../store/user";
 import http from "../../api";
 import { environment } from "../../constants";
 import { validateEmail } from "../../core/helpers/validation";
 
 export const Login = () => {
-  //   const dispatch = useDispatch();
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
@@ -77,12 +77,13 @@ export const Login = () => {
         password,
       })
       .then((res) => {
-        console.log(res.data);
+        console.log(res);
         setError("");
-        //dispatch(setAuth(res.data.data.user));
-        // console.log(res);
+        dispatch(setAuth(res));
+        console.log(dispatch(setAuth(res)));
 
         localStorage.setItem("token", res.data.token);
+        //setloggedInUser(res.data);
         Swal.fire({
           icon: "success",
           title: "Login successful",
@@ -93,10 +94,10 @@ export const Login = () => {
         }).then(() => {
           if (res.data.role == 1) {
             console.log("goto admin side");
-            navigate("/admin/AdminDashboard");
+            navigate("/admin/user");
           } else {
             console.log("goto user side");
-            navigate("/user/UserDashboard");
+            navigate("/user/vehicles/Vehicle");
           }
           http.refreshToken();
           setEmail("");

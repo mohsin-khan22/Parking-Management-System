@@ -13,17 +13,23 @@ export const userSlice = createSlice({
       window.localStorage.setItem("token", action.payload.token);
       http.refreshToken();
     },
-
-    purgeAuth: (state) => {
+    logout(state, action) {
       state.value = {};
       window.localStorage.removeItem("token");
-      window.localStorage.removeItem("userAddress");
-      http.refreshToken();
-
-      // if (location.pathname !== "/auth") window.location.href = "/auth";
+      if (window.location.pathname !== "/auth") {
+        window.location.href = "/auth";
+      }
     },
+    //purgeAuth: (state) => {
+    // state.value = {};
+    //window.localStorage.removeItem("token");
+    //window.localStorage.removeItem("userAddress");
+    //http.refreshToken();
+
+    //if (location.pathname !== "/auth") window.location.href = "/auth";
+    ///},
   },
 });
 
-export const { setAuth, purgeAuth } = userSlice.actions;
+export const { setAuth, logout } = userSlice.actions;
 export default userSlice.reducer;

@@ -1,16 +1,19 @@
 const jsonwebtoken = require("jsonwebtoken");
 
 const User = require("../models/User");
-let secret = require("../config").secret;
+//let secret = require("../config").secret;
+const { secret } = require("../config/env/development");
 
 const isToken = function (req, res, next) {
   var token = req.headers.authorization.split(" ");
+  console.log(token);
   if (typeof token[1] === "undefined" || typeof token[1] === null) {
     res
       .status(401)
       .send({ message: "Please login first to continue further!" });
   } else {
-    jsonwebtoken.verify(token[1], process.env.secret, (err, data) => {
+    //console.log(secret);
+    jsonwebtoken.verify(token[1], secret, (err, data) => {
       if (err) {
         res
           .status(401)

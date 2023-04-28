@@ -17,10 +17,11 @@ const vehicleSchema = new mongoose.Schema({
 });
 vehicleSchema.methods.toJSON = function () {
   return {
+    id: this.id,
     model: this.model,
     color: this.color,
     number: this.number,
-    owner: this.model,
+    owner: this.owner,
   };
 };
 module.exports = mongoose.model("Vehicle", vehicleSchema);

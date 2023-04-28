@@ -71,6 +71,7 @@ userSchema.methods.generateJWT = function () {
 
 userSchema.methods.toJSON = function () {
   return {
+    id: this.id,
     email: this.email,
     firstName: this.firstName,
     lastName: this.lastName,
@@ -85,6 +86,7 @@ userSchema.methods.toJSON = function () {
 userSchema.methods.toAuthJSON = function () {
   return {
     token: this.generateJWT(),
+    id: this.id,
     email: this.email,
     firstName: this.firstName,
     lastName: this.lastName,

@@ -10,7 +10,9 @@ let frontend = require("../../config").frontend;
 let backend = require("../../config").backend;
 let bcrypt = require("bcrypt");
 //const LocalStrategy = require("passport-local");
-
+router.get("/context", auth.isToken, auth.isUser, (req, res, next) => {
+  return res.status(200).send(req.user.toAuthJSON());
+});
 router.post("/register", (req, res) => {
   User.findOne({ email: req.body.email }).then((user) => {
     console.log(user);
@@ -74,6 +76,52 @@ router.post("/login", function (req, res) {
     return res.status(500).send(err);
   }
 });*/
+router.put(
+  "/update-password",
+  auth.isToken,
+  auth.isUser,
+  async (req, res, next) => {
+    if (!req.body.oldPassword || !req.body.password)
+      return res.status(401).send("Missing Required Parameters");
+
+    if (req.body.oldPassword.length <= 0 || req.body.password.length <= 0)
+      return res.status(400).send("Missing Required Parameters");
+
+    if (req.body.oldPassword === req.body.password)
+      return res
+        .status(422)
+        .send("Old password and new password cannot be same");
+
+    try {
+      const user = await User.findById(req.user.id);
+      if (!user) {
+        return res.status(400).send(error.message);
+      }
+
+      const hashedPassword = user.password;
+      const passwordMatch = await bcrypt.compare(
+        req.body.oldPassword,
+        hashedPassword
+      );
+
+      if (passwordMatch) {
+        const salt = await bcrypt.genSalt(10);
+        const hashedNewPassword = await bcrypt.hash(req.body.password, salt);
+
+        user.password = hashedNewPassword;
+        await user.save();
+
+        return res
+          .status(200)
+          .send({ message: "Password has been changed successfully" });
+      } else {
+        return res.status.apply(422).send("Invalid Old Password!!");
+      }
+    } catch (error) {
+      return res.status(500).send(error.message);
+    }
+  }
+);
 router.post("/verify-otp/:type", async (req, res, next) => {
   console.log("req params", req.params.type);
 
@@ -238,7 +286,7 @@ router.post("/forgot", async (req, res, next) => {
     });
 });
 
-router.post("/update-password", auth.isToken, auth.isUser, (req, res, next) => {
+router.post("/update-password", auth.isToken, (req, res, next) => {
   console.log(req.user);
   if (!req.body.password || req.body.password == "")
     res.status(404).send("All input fields are required!");
